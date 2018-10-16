@@ -1,20 +1,523 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://github.com/angular/angular-cli/wiki">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<h1>Angular Elements vs. Web Components</h1>
+<p>
+  The idea of Angular Elements is both easy and tempting. You have the wonderful Angular framework
+  and together with Web Components finally the possibility to use your components everywhere in the modern web - not only in your SPAs.
+</p>
+<p class="thesis">
+  <strong>My thesis about Angular Element:</strong> I have an Angular component and Angular will map any functionality (projection, query, injection) correctly to the Shadow DOM standard when I choose to opt-in and leave the emulation.
+</p>
+<p>
+  I'm working on an enterprise Angular UI Library with around 40 components. I always imagined that I can switch the encapsulation to <code>ShadowDom</code> and use <code>createCustomElement()</code> to smoothly convert any existing component. That thesis you read is also the mindset of many people I have seen writing and talking about Angular Elements. Almost any lightweight blog post sell you Angular Elements as a dead-simple way to convert your existing Angular components to Web Components. Is that thinking too naive? This page is a demonstration of Angular Elements and what problems you might face once you start migrating your components.
+</p>
+<p>
+  You will see in the following content several components being mounted through the Web Component mechanism and also through Angular's internal lifecycle. We can do this as we use different selectors for both scenarios. All web components are prefixed with <code>web-*</code> and all internal selectors get <code>app-*</code>. This way we can see how the element will behave in both worlds on the same page. To make it visually easy to compare I put them side by side.<br><br>
 
+  <strong>Important:</strong>Even though the web components appear inside this Angular page they are real native ones.
+</p>
+
+<hr/>
+
+<h2>Questions</h2>
+<p>
+  Here my set of questions that arise when I imagine my components being used as web components.
+</p>
+
+<dl>
+  <dt>
+    <a href='#experiment-01'>Smoketest — does it work at all?</a>
+  </dt>
+  <dd>Let's test the basic principle of converting an Angular component to a web component.</dd>
+
+  <dt>
+      <a href='#experiment-02'>Content Projection</a>
+  </dt>
+  <dd>
+    We have <code>&lt;slot&gt;</code> in Shadow DOM stadard V1, <code>&lt;content&gt;</code> in V0 and <code>&lt;ng-content&gt;</code>in Angular. How does this play together?
+  </dd>
+
+  <dt>
+    <a href='#experiment-03'>Content Querying</a>
+  </dt>
+  <dd>
+    This is related to 2) Content Projection. How can we query our elements ? <code>@ContentChildren</code> in Angular vs. <code>assignedSlots</code> in Angular. Do we have to choose or will Angular help us converting our queries to the web component world?
+  </dd>
+
+  <dt>
+    <a href='#experiment-04'>Native Elements</a>
+  </dt>
+  <dd>
+    Can we extend native elements like <code>input</code> or <code>button</code> ?
+  </dd>
+
+  <dt>
+    <a>Dependency Injection (TODO)</a>
+  </dt>
+  <dd>
+    A smoketest for dependency injection would be integrating a service. This is outlined in many blog posts and also the official documentation and works because we pass in the injector. But what about injecting other things. Can we inject the parent element
+    and create loose coupling between parent and its items ? That's a common scheme in Angualr and I wonder how this translates into the web component world.
+  </dd>
+
+  <dt>
+    <a>Change Detection (TODO)</a>
+  </dt>
+  <dd>
+    How does CD work in an Angular element? Will it behave more like a <code>OnPush</code> component where bindings are fine and I have to call markForCheck occassionally or do I have to call <code>app.tick</code> frequently ?
+  </dd>
+</dl>
+
+<h2>Experiments</h2>
+<!-- Smoketest -->
+<section class="example">
+
+  <h3 class="example__headline" id='experiment-01'>1. Smoketest</h3>
+
+  <div class="example__content">
+    <div class="example__description">
+      Simple Smoketest, Component with some inputs and a template (to add prefix and postfix). No content projection yet, only inputs.
+    </div>
+    <hr class="example__divider">
+    <div class="example__components">
+      <div>
+        <h2>Angular Component</h2>
+        <app-emoji-text text="Hello you are cool!"></app-emoji-text>
+        <textarea highlight-js [lang]="'html'">
+          <app-emoji-text
+            text="Hello you are cool!"
+            prefix="🌟"
+            postfix="🤘">
+          </app-emoji-text>
+        </textarea>
+      </div>
+
+      <div>
+        <h2>Web Component</h2>
+        <web-emoji-text text="Hello you are cool!" prefix="🍀" postfix="🧐"></web-emoji-text>
+        <textarea highlight-js [lang]="'html'">
+          <web-emoji-text
+            text="Hello you are cool!"
+            prefix="🍀"
+            postfix="🧐">
+          </web-emoji-text>
+        </textarea>
+      </div>
+    </div>
+    <div>
+      <p>
+          Reminder: The component with the <code>app-</code> prefix is the Angular one.
+          The <code>web-emoji-text</code> is a real web component. It's definition is
+          created by Angular here but it's not required to run inside the Angular template.
+          <br><br>
+          Conclusion:
+          Works as expected. That's a good start.
+        </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- Content Projection -->
+<section class="example">
+    <h3 class="example__headline" id='experiment-02'>2. Content Projection</h3>
+
+    <div class="example__content">
+      <div class="example__description">
+        <p>
+            Angular's internal component system mimics the web component standard since forever. You can see it
+            by looking at <code>&lt;ng-content&gt;</code> vs <code>&lt;content&gt;</code> (Shadow DOM VO) or the <code>host</code> and <code>::ng-deep</code> selectors in CSS. That's important because Angular wants to give you the possibility to use the native shadow DOM while providing an emulation of the Shadow DOM standard to make
+            the framework usable without the Shadow DOM present.
+        </p>
+
+        <p>
+            Problem is: V1 of the standard was released but Angular is not (yet?) reflecting it internally. Yes, you can use the new Shadow DOM by setting the encapsulation of your component to <code>ViewEncapsulation.ShadowDom</code> but what about all the Angular features — will they work across web component boundaries? Is it even intended?
+        </p>
+        <p>
+            For example: With V1 came <code>&lt;slot&gt;&lt;/slot&gt;</code> but there is no <code>ng-slot</code> so you can't expect any magic conversion when you choose to create Angular Elements with a native Shadow DOM V1 through <code>encapsulation: ViewEncapsulation.ShadowDom</code>.
+            You have to choose between <code>&lt;slot&gt;&lt;/slot&gt;</code> and <code>&lt;ng-content&gt;&lt;/ng-content&gt;</code>
+        </p>
+        <p>
+            If you decide to use the native Shadow DOM you will have to work directly with Shadow DOM API. There is no Angular abstraction. You will potentially loose important abilities of the Angular framework like Injection of the parent element and querying children and their changes. That's what we want to find out here.
+        </p>
+        <p>
+            Maybe it's not that bad, as you are covered by the standard. There is <code>(slotchanged)</code> and you can use
+            of course normal element queries to find your children.
+        </p>
+      </div>
+
+      <hr class="example__divider">
+
+      <p>
+        You will see the same component being mounted by Angular and as a web component.
+        The different colors tell you how the content is projected. We are using both <code>&lt;slot&gt;</code> and  <code>&lt;ng-content&gt;</code>.
+        The template looks more or less like this.
+      </p>
+      <textarea highlight-js [lang]="'html'">
+        <!-- blue marker -->
+        <div class="content--ng">
+          <ng-content></ng-content>
+        </div>
+
+        <!-- pink marker -->
+        <div class="content--slot">
+          <slot #itemsSlot (slotchange)="handleSlotContentChanged(event)"></slot>
+        </div>
+      </textarea>
+
+      <p>Depending on the environment (Angular or Web Component) projected arrives only through one of the projections. That's where I expected ng-content to be replaced by something like ng-slot so I can use ng-slot and it will translate to slot when being used in a web component.</p>
+      <div class="example__components">
+        <div>
+          <h2>Angular Component</h2>
+          <p>
+            It's the same application for both but the blue color here signals that the <code>&lt;ng-content&gt;</code> is
+            being used to project the content into the component.
+          </p>
+          <app-accordion>
+            <app-accordion-item title='first'>
+              content of the first accordion
+            </app-accordion-item>
+            <app-accordion-item title='second'>
+              content of the second accordion
+            </app-accordion-item>
+          </app-accordion>
+
+          <textarea highlight-js [lang]="'html'">
+            <app-accordion>
+              <app-accordion-item title='first'>
+                content of the first accordion
+              </app-accordion-item>
+              <app-accordion-item title='second'>
+                content of the second accordion
+              </app-accordion-item>
+            </app-accordion>
+          </textarea>
+        </div>
+
+        <div>
+          <h2>Web Component</h2>
+          <p>
+              Again, same component as the Angular one but mounted as a web component.
+              The pink color signals here the usage of the <code>&lt;slot&gt;</code> projection.
+            </p>
+          <web-accordion>
+            <web-accordion-item title='first'>
+              content of the first accordion
+            </web-accordion-item>
+            <web-accordion-item title='second'>
+              content of the second accordion
+            </web-accordion-item>
+          </web-accordion>
+          <textarea highlight-js [lang]="'html'">
+            <web-accordion>
+              <web-accordion-item title='first'>
+                content of the first accordion
+              </web-accordion-item>
+              <web-accordion-item title='second'>
+                content of the second accordion
+              </web-accordion-item>
+            </web-accordion>
+          </textarea>
+        </div>
+      </div>
+      <div>
+        <h2>Conclusion</h2>
+        <p>
+          Once you decide to use web components you need to use them inside and outside of Angular or you would need
+          to handle different places where your content pours in. This is basically fine but there are some consquences. See the next chapter about content querying.
+        </p>
+      </div>
+    </div>
+  </section>
+
+<!-- Content Query -->
+<section class="example">
+  <h3 class="example__headline" id="experiment-03">3. Content Querying</h3>
+
+  <div class="example__content">
+    <div class="example__description">
+        <p>
+            How can we query content in Angular Elements? Let's test ContentChildren and ViewChildren
+            together with other web components. The template of this component looks like this. We try to query for the given content and output some stats.
+        </p>
+        <p>
+            As usual there are slot and ng-content in the template but this time named to fill in specific parts of the given content. You will see the div I pass into the component has a data attribute and also a slot attribute of "fancy-content". That's because ng-content uses a selector approach to target content and slots are explicitly named.
+        </p>
+        <textarea highlight-js [lang]="'html'">
+          <h3>Internal content (view)</h3>
+
+          <button>Default Button</button><br>
+          <app-button>Angular Button</app-button><br>
+          <web-button>Web Button</web-button>
+
+          <h3>Projected content</h3>
+          <h4>Selector [fancy-content]</h4>
+          <div class="content--ng">
+            <ng-content select="[fancy-content]"></ng-content>
+          </div>
+
+          <div class="content--slot">
+            <slot name='fancy-content'></slot>
+          </div>
+
+          <h4>
+            Default <br>
+            <small>(not fetched from other ng-contents/slots yet)</small>
+          </h4>
+          <div class="content--ng">
+            <ng-content></ng-content>
+          </div>
+          <div class="content--slot">
+            <slot></slot>
+          </div>
+        </textarea>
+    </div>
+
+    <hr class="example__divider">
+
+    <div class="example__components">
+      <div>
+        <h2>Angular Component</h2>
+        <app-content-query>
+          <div slot="fancy-content" fancy-content>
+            <label #contentitem contentitem >1. An input <input/></label>
+            <p #contentitem contentitem>2. Lorem ipsum dolar sit amet</p>
+          </div>
+          <span #contentitem contentitem>3. Some content for the default slot</span>
+        </app-content-query>
+        <hr class="example__divider">
+        <textarea highlight-js [lang]="'html'">
+          <app-content-query>
+            <div slot="fancy-content" fancy-content>
+              <label #contentitem contentitem >1. An input <input/></label>
+              <p #contentitem contentitem>2. Lorem ipsum dolar sit amet</p>
+            </div>
+            <span #contentitem contentitem>3. Some content for the default slot</span>
+          </app-content-query>
+        </textarea>
+
+        <p>
+          <strong>Remember</strong>: ContentChildren can ony query for directives/components or template variables
+          so we have to use both template references and a data attribute so we can query in both worlds.
+        </p>
+        <p>
+          See the first 3 ? ContentChildren works as expected and returns all three elements marked with <code>#contentitem</code>. Vanilla Query returns 0 as the query is not triggered in this context.
+        </p>
+        <textarea highlight-js [lang]="'ts'">
+          @ContentChildren('contentitem') allContentItems: QueryList<any>;
+        </textarea>
+      </div>
+
+      <div>
+        <h2>Web Component Role</h2>
+        <web-content-query>
+          <div slot="fancy-content" fancy-content>
+            <label #contentitem contentitem >1. An input <input/></label>
+            <p #contentitem contentitem>2. Lorem ipsum dolar sit amet</p>
+          </div>
+          <span #contentitem contentitem>3. Some content for the default slot</span>
+        </web-content-query>
+        <hr class="example__divider">
+        <textarea highlight-js [lang]="'html'">
+          <web-content-query>
+            <div slot="fancy-content" fancy-content>
+              <label #contentitem contentitem >1. An input <input/></label>
+              <p #contentitem contentitem>2. Lorem ipsum dolar sit amet</p>
+            </div>
+            <span #contentitem contentitem>3. Some content for the default slot</span>
+          </web-content-query>
+        </textarea>
+        <p>
+          The ContentQuery is empty and instead the vanilla query is triggered by the <code>(slotchanged)</code> event.
+          <textarea highlight-js [lang]="'ts'">
+            const elements = this.elementRef.nativeElement.querySelectorAll('[contentitem]');
+            this.elementsFromSlots = Array.prototype.slice.call(elements);
+          </textarea>
+        </p>
+      </div>
+    </div>
+    <div>
+      <h2>Conclusion</h2>
+      <p>
+        Depending of the context you are using your component,
+      you have to use either slots or ng-content and depending on what is being used
+      you have to use the correct querying strategy and use either ContentChildren or plain Vanilla querying with querySelector etc.
+      </p>
+      <p>
+        For my understanding this means:
+        If you want to use your Angular component as a web component, you have to use that component
+        also as a web component in your Angular SLA and stick to the native methods for querying content.
+        No ContentChildren and friends.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- Native Element -->
+<section class="example">
+  <h3 class="example__headline" id='experiment-04'>4. Native Elements</h3>
+
+  <div class="example__content">
+    <div class="example__description">
+        <p>
+            Sometimes it's crucial to extend an native element instead of creating a new element
+            or wrapping it in an additional container where you would mimic the whole API of the given element.
+            Important elements you don't want to wrap are <code>&lt;button&gt;</code> and <code>&lt;input&gt;</code> otherwise you have to replicate their API or even worse loose some default behavior given by the browser.
+        </p>
+        <p>
+            In Angular you can simply use a selector including the native element like <code>button[yourButton]</code>
+            to mount a directive onto an existing elements. To style it you can even mount a component with a template of <code>&lt;ng-content&gt;&lt;/ng-content&gt;</code> but this should only be done with elements without a own shadow DOM. A button is a good example. You can't do this with inputs and you can have only one component attached per element.
+        </p>
+        <p>
+          In the web component world you can extend the native elements. To base your element on a  <code>HTMLButtonElement</code> simply extend it like so:
+          <textarea highlight-js [lang]="'ts'">
+            export class ButtonVanillaNative extends HTMLButtonElement {
+              constructor() {
+                super();
+                // do something so you can recognize your own button
+                this.innerHTML = this.innerHTML + ' <-- via is="" 🙏';
+              }
+            }
+          </textarea>
+
+          Later make your web component with it. When you define the element there is an option to tell the browser that you are actually extending from an existing element.
+
+          <textarea highlight-js [lang]="'ts'">
+            customElements.define('web-button-native', ButtonVanillaNative, {extends: 'button'});
+          </textarea>
+        </p>
+        <p>
+          You can use it with the <code>is</code> attribute. That's exactly what I have done with the following button:<br>
+          <button is="web-button-native">is='element' Button!</button><br>
+          As you can see you can't see any difference to a normal button. I think there is a bug in Angular that prevents the <code>is</code>
+          to be recognized by the browser. I also tried <code>attr.is</code> and <code>htmlIs</code> (like htmlFor). I can even find some specs around <code>is=""</code> in <a href='https://github.com/angular/angular/blob/331989cea357abf9a20088c41a86a077435d17f7/packages/compiler/test/shadow_css_spec.ts#L111'>Angular master</a>. You can see it working if you scroll completely down. There you will find the same element — but outside of the Angular application. So something is off here.
+        </p>
+        <p>
+          Let's ignore the thing with <code>is</code> and think about how we could create the same extended button with Angular.
+          We want to extend from <code>HTMLButtonElement</code> but there is simply no way. Look here
+
+          <textarea highlight-js [lang]="'ts'">
+            // 1a. Remember? That's how we just extended from HTMLButtonElement with plain JavaScript.
+            export class ButtonVanillaNative extends HTMLButtonElement
+            // 1b. and here how we registered our native button that extends from HTMLButtonElement.
+            customElements.define('web-button-native', ButtonVanillaNative, {extends: 'button'});
+
+            // 2a. That's how we create a web component from an Angular component
+            // No way telling Angular to use HTMLButtonElement through createCustomElement()
+            const ButtonElement = createCustomElement(ButtonComponent, {injector});
+
+            // 2b. We can't use {extends: 'button'} here as we are missing the correct base class.
+            customElements.define('web-button', ButtonElement);
+          </textarea>
+
+        </p>
+        <p>
+          If you look into the Angular elements <a href='https://github.com/angular/angular/blob/331989cea357abf9a20088c41a86a077435d17f7/packages/elements/src/create-custom-element.ts#L42-L134'>sources</a>
+          you will find that the underlying structure <code>NgElement</code> is always extending from HTMLElement.
+
+          <textarea highlight-js [lang]="'ts'">
+              export abstract class NgElement extends HTMLElement{
+                //..
+              }
+              export function createCustomElement<P>(...): NgElementConstructor<P> {
+                //...
+                class NgElementImpl extends NgElement {
+                  //...
+                }
+              }
+          </textarea>
+
+          So no way of extending an existing element I think. You can still wrap teh native element in your own web component.
+          But as said, you will hide the existing API surface of the involved element from the user. Here an example with a wrapped button.
+        </p>
+    </div>
+
+    <hr class="example__divider">
+
+    <p>As in the previous examples, blue stands for <code>ng-content</code> and pink for <code>slot</code> content projection</p>
+
+    <div class="example__components">
+      <div>
+        <h2>Angular Component</h2>
+        <p>
+          the blue bar signals usage of ng-content
+        </p>
+        <app-button>I'm a button</app-button>
+        <textarea highlight-js [lang]="'html'">
+          <app-button>I'm a button</app-button>
+        </textarea>
+
+      </div>
+
+      <div>
+        <h2>Web Component</h2>
+        <p>
+          the pink bar signals usage of slot
+        </p>
+        <web-button>I'm a button</web-button>
+        <textarea highlight-js [lang]="'html'">
+          <web-button>I'm a button</web-button>
+        </textarea>
+      </div>
+    </div>
+
+    <div>
+      <h2>Conclusion</h2>
+      <p>
+        If you have reasons to extend native elements, create your native implementation
+        and don't use Angular. In most cases this should be fine as you can't do so much
+        in such a limited environment. You won't miss Angular and can perfectly stick to vanilla JS.
+      </p>
+    </div>
+  </div>
+</section>
+
+
+<!-- Dependency Injection -->
+<section class="example">
+  <h3 class="example__headline" id="experiment-05">5. Dependency Injection (TODO)</h3>
+
+  <div class="example__content">
+    <div class="example__description">
+        <p>
+            Can we inject the parent element? If not what's the alternative ?
+            Is normal service injection handled properly ?
+        </p>
+    </div>
+    <hr class="example__divider">
+    <div class="example__components">
+      <div>
+        <h2>Angular Component</h2>
+
+      </div>
+
+      <div>
+        <h2>Web Component Role</h2>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- Change Injection -->
+<section class="example">
+  <h3 class="example__headline" id="experiment-06">6. Change Detection (TODO)</h3>
+
+  <div class="example__content">
+    <div class="example__description">
+        <p>
+            Let's see how we can handle change detection in web components build with Angular.
+        </p>
+    </div>
+    <hr class="example__divider">
+    <div class="example__components">
+      <div>
+        <h2>Angular Component</h2>
+
+      </div>
+
+      <div>
+        <h2>Web Component Role</h2>
+
+      </div>
+    </div>
+  </div>
+</section>

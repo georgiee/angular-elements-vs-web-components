@@ -1,0 +1,18 @@
+<div class="header"  (click)="toggle()">
+  {{title}}
+  <button>
+    <ng-container  *ngIf="!opened">🔽</ng-container>
+    <ng-container  *ngIf="opened">️🔼</ng-container>
+  </button>
+</div>
+
+
+<div *ngIf="opened">
+  <div class="content--ng">
+    <ng-content></ng-content>
+  </div>
+
+  <div class="content--slot">
+    <slot></slot>
+  </div>
+</div>

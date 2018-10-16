@@ -1,0 +1,35 @@
+<h3>Internal content (view)</h3>
+
+<button>Default Button</button><br>
+<app-button>Angular Button</app-button><br>
+<web-button>Web Button</web-button>
+
+<h3>Projected content</h3>
+<h4>Selector [fancy-content]</h4>
+<div class="content--ng">
+  <ng-content select="[fancy-content]"></ng-content>
+</div>
+
+<div class="content--slot">
+  <slot name='fancy-content' #slotNamed (slotchange)="handleSlotContentChanged($event)"></slot>
+</div>
+
+<h4>
+  Default <br>
+  <small>(not fetched from other ng-contents/slots yet)</small>
+</h4>
+<div class="content--ng">
+  <ng-content></ng-content>
+</div>
+<div class="content--slot">
+  <slot #slotDefault (slotchange)="handleSlotContentChanged($event)"></slot>
+</div>
+
+<ul>
+  <li><strong>ContentChildren("contentitem"):</strong> {{allContentItems.length}}</li>
+
+  <li>
+    <strong>Vanilla Query ([contentitem])</strong>
+    {{elementsFromSlots.length}}
+  </li>
+</ul>

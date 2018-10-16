@@ -1,1 +1,111 @@
 /* You can add global styles to this file, and also import other style files */
+
+body {
+  font-family: 'Roboto', sans-serif;
+  background: #fff;
+  color: #333;
+  padding: 20px;
+}
+
+p {
+  margin: 0;
+}
+
+p + p {
+  margin-top: 1em;
+}
+
+.test {
+  width: 100%;
+  overflow: hidden
+}
+textarea {
+  width: 100px;
+}
+
+code {
+  background-color: #D9BB93;
+  color: #333;
+  padding: 0 5px;
+}
+
+h1 {
+  text-align: center;
+  font-size: 3em;
+}
+.thesis {
+  font-style: italic;
+  font-size: 1.5em;
+  text-align: center;
+  line-height: 1.3em;
+  margin-bottom: 2em;
+}
+.page {
+  max-width: 1200px;
+  margin: auto;
+}
+
+.example {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #333;
+  background-color: #F1F0E2;
+  color: #333;
+}
+
+.example:not(:first-of-type){
+  margin-top: 40px;
+}
+
+.example__content {
+  padding: 0 20px;
+}
+
+.example__headline {
+  background-color: #3E4E59;
+  padding: 5px;
+  color: #fff;
+}
+
+.example__divider {
+  width: 50px;
+}
+
+.example__description {
+  /* font-style: italic; */
+}
+
+@media screen and (min-width: 500px) {
+  .example__components {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 30px;
+  }
+  .example__components > * {
+    max-width: 100%;
+    overflow: hidden;
+  }
+}
+
+hr {
+  border: none;
+  border-bottom: 2px solid #F25652;
+  margin: 0;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+dl {
+  counter-reset: dl-counter;
+}
+
+dt {
+  font-weight: bold;
+}
+
+dt:not(:first-child){
+  margin-top: 10px;
+}
+
+dt::before {
+  content: counter(dl-counter) ". ";
+  counter-increment: dl-counter;
+}

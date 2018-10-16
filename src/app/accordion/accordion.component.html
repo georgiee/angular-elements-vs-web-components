@@ -1,0 +1,22 @@
+<h3>I'm an Accordion</h3>
+
+<!-- blue marker -->
+<div class="content--ng">
+  <ng-content></ng-content>
+</div>
+
+<!-- pink marker -->
+<div class="content--slot">
+  <slot #itemsSlot (slotchange)="handleSlotContentChanged(event)"></slot>
+</div>
+<!--
+<div>
+  <ul>
+    <li>
+        <strong>@ContentChildren Count:</strong> {{items.length}}<br>
+    </li>
+    <li>
+        <strong>@Slot (via assignedNodes):</strong> {{this.itemsFromSlot.length}}
+    </li>
+  </ul>
+</div> -->
