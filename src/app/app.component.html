@@ -12,8 +12,39 @@
 <p>
   You will see in the following content several components being mounted through the Web Component mechanism and also through Angular's internal lifecycle. We can do this as we use different selectors for both scenarios. All web components are prefixed with <code>web-*</code> and all internal selectors get <code>app-*</code>. This way we can see how the element will behave in both worlds on the same page. To make it visually easy to compare I put them side by side.<br><br>
 
-  <strong>Important:</strong>Even though the web components appear inside this Angular page they are real native ones.
+  <strong>Important: </strong>Even though the web components appear inside this Angular page they are real native ones.
 </p>
+
+<h2>Summary</h2>
+<p>
+  After writing those experiments (a day after the Angular 7 was released) my image of Angular Elements is a little bit clearer.
+  In case your application is self-contained and you are not using any external content in form of content projection you could be fine 🙌
+
+  Does your content depend on projected content or even other component children you need to be very careful.
+  Do you want to keep that component using inside Angular SPA and as a web component in parallel without creating a second implementation
+  then your are left with the common denominator which is the V1 Shadow DOM standard.
+
+  This means:
+</p>
+
+<ul>
+  <li>
+    Stick to the native Shadow DOM standard.
+    This means use <code>&lt;slot&gt;&lt;/slot&gt;</code> and not <code>&lt;ng-content&gt;&lt;/ng-content&gt;</code> for example.
+  </li>
+  <li>
+    You can't use <code>@ContentChildren</code> and friends to query your content. Use <code>(slotchanged)</code>
+    and query for your other components with vanilla JS (<code>querySelector</code>, <code>querySelectorAll</code>)
+  </li>
+  <li>
+    I think you won't be able to work across web component boundaries as easy as you work across component boundaries in Angular.
+    Your existing components like Dropdown or Tabs could require a heavy refactoring so they can live in both worlds. (Those are components that usually have children that are tightly bound to their parent)
+  </li>
+  <li>
+    If you want to extend native elements you're better off with ditching Angular and create native classes and register them with your web component.
+  </li>
+</ul>
+
 
 <hr/>
 
@@ -32,14 +63,14 @@
       <a href='#experiment-02'>Content Projection</a>
   </dt>
   <dd>
-    We have <code>&lt;slot&gt;</code> in Shadow DOM stadard V1, <code>&lt;content&gt;</code> in V0 and <code>&lt;ng-content&gt;</code>in Angular. How does this play together?
+    We have <code>&lt;slot&gt;</code> in Shadow DOM standard V1, <code>&lt;content&gt;</code> in V0 and <code>&lt;ng-content&gt;</code>in Angular. How does this play together?
   </dd>
 
   <dt>
     <a href='#experiment-03'>Content Querying</a>
   </dt>
   <dd>
-    This is related to 2) Content Projection. How can we query our elements ? <code>@ContentChildren</code> in Angular vs. <code>assignedSlots</code> in Angular. Do we have to choose or will Angular help us converting our queries to the web component world?
+    This is related to 2) Content Projection. How can we query our elements ? <code>@ContentChildren</code> vs. <code>assignedSlots</code>. Do we have to choose or will Angular help us converting our queries to the web component world?
   </dd>
 
   <dt>
@@ -54,14 +85,14 @@
   </dt>
   <dd>
     A smoketest for dependency injection would be integrating a service. This is outlined in many blog posts and also the official documentation and works because we pass in the injector. But what about injecting other things. Can we inject the parent element
-    and create loose coupling between parent and its items ? That's a common scheme in Angualr and I wonder how this translates into the web component world.
+    and create lose coupling between parent and its items ? That's a common scheme in Angular and I wonder how this translates into the web component world.
   </dd>
 
   <dt>
     <a>Change Detection (TODO)</a>
   </dt>
   <dd>
-    How does CD work in an Angular element? Will it behave more like a <code>OnPush</code> component where bindings are fine and I have to call markForCheck occassionally or do I have to call <code>app.tick</code> frequently ?
+    How does CD work in an Angular element? Will it behave more like a <code>OnPush</code> component where bindings are fine and I have to call markForCheck occasionally or do I have to call <code>app.tick</code> frequently ?
   </dd>
 </dl>
 
@@ -103,13 +134,13 @@
     </div>
     <div>
       <p>
-          Reminder: The component with the <code>app-</code> prefix is the Angular one.
-          The <code>web-emoji-text</code> is a real web component. It's definition is
-          created by Angular here but it's not required to run inside the Angular template.
-          <br><br>
-          Conclusion:
-          Works as expected. That's a good start.
-        </p>
+        Reminder: The component with the <code>app-</code> prefix is the Angular one.
+        The <code>web-emoji-text</code> is a real web component. It's definition is
+        created by Angular here but it's not required to run inside the Angular template.
+      </p>
+
+      <h2>Conclusion</h2>
+      <p>Works as expected. That's a good start.</p>
     </div>
   </div>
 </section>
@@ -221,7 +252,7 @@
         <h2>Conclusion</h2>
         <p>
           Once you decide to use web components you need to use them inside and outside of Angular or you would need
-          to handle different places where your content pours in. This is basically fine but there are some consquences. See the next chapter about content querying.
+          to handle different places where your content pours in. This is basically fine but there are some consequences. See the next chapter about content querying.
         </p>
       </div>
     </div>
@@ -294,7 +325,7 @@
         </textarea>
 
         <p>
-          <strong>Remember</strong>: ContentChildren can ony query for directives/components or template variables
+          <strong>Remember</strong>: ContentChildren can only query for directives/components or template variables
           so we have to use both template references and a data attribute so we can query in both worlds.
         </p>
         <p>

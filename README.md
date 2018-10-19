@@ -3,30 +3,49 @@ How can we use Angular Elements with our own projects. How does Angular Elements
 
 Visit the [deployed version](https://georgiee.github.io/angular-elements-vs-web-components) for my insights.
 
-## Questions I'm asking
+## Summary
+<ul>
+  <li>
+    Stick to the native Shadow DOM standard.
+    This means use <code>&lt;slot&gt;&lt;/slot&gt;</code> and not <code>&lt;ng-content&gt;&lt;/ng-content&gt;</code> for example.
+  </li>
+  <li>
+    You can't use <code>@ContentChildren</code> and friends to query your content. Use <code>(slotchanged)</code>
+    and query for your other components with vanilla JS (<code>querySelector</code>, <code>querySelectorAll</code>)
+  </li>
+  <li>
+    I think you won't be able to work across web component boundaries as easy as you work across component boundaries in Angular.
+    Your existing components like Dropdown or Tabs could require a heavy refactoring so they can live in both worlds. (Those are components that usually have children that are tightly bound to their parent)
+  </li>
+  <li>
+    If you want to extend native elements you're better off with ditching Angular and create native classes and register them with your web component.
+  </li>
+</ul>
+
+## Questions
 
 <dl>
   <dt>
-    <a href='#experiment-01'>Smoketest — does it work at all?</a>
+    <a href='https://georgiee.github.io/angular-elements-vs-web-components/#experiment-01'>Smoketest — does it work at all?</a>
   </dt>
   <dd>Let's test the basic principle of converting an Angular component to a web component.</dd>
 
   <dt>
-      <a href='#experiment-02'>Content Projection</a>
+      <a href='https://georgiee.github.io/angular-elements-vs-web-components/#experiment-02'>Content Projection</a>
   </dt>
   <dd>
-    We have <code>&lt;slot&gt;</code> in Shadow DOM stadard V1, <code>&lt;content&gt;</code> in V0 and <code>&lt;ng-content&gt;</code>in Angular. How does this play together?
+    We have <code>&lt;slot&gt;</code> in Shadow DOM standard V1, <code>&lt;content&gt;</code> in V0 and <code>&lt;ng-content&gt;</code>in Angular. How does this play together?
   </dd>
 
   <dt>
-    <a href='#experiment-03'>Content Querying</a>
+    <a href='https://georgiee.github.io/angular-elements-vs-web-components/#experiment-03'>Content Querying</a>
   </dt>
   <dd>
-    This is related to 2) Content Projection. How can we query our elements ? <code>@ContentChildren</code> in Angular vs. <code>assignedSlots</code> in Angular. Do we have to choose or will Angular help us converting our queries to the web component world?
+    This is related to 2) Content Projection. How can we query our elements ? <code>@ContentChildren</code> vs. <code>assignedSlots</code>. Do we have to choose or will Angular help us converting our queries to the web component world?
   </dd>
 
   <dt>
-    <a href='#experiment-04'>Native Elements</a>
+    <a href='https://georgiee.github.io/angular-elements-vs-web-components/#experiment-04'>Native Elements</a>
   </dt>
   <dd>
     Can we extend native elements like <code>input</code> or <code>button</code> ?
@@ -44,7 +63,7 @@ Visit the [deployed version](https://georgiee.github.io/angular-elements-vs-web-
     <a>Change Detection (TODO)</a>
   </dt>
   <dd>
-    How does CD work in an Angular element? Will it behave more like a <code>OnPush</code> component where bindings are fine and I have to call markForCheck occassionally or do I have to call <code>app.tick</code> frequently ?
+    How does CD work in an Angular element? Will it behave more like a <code>OnPush</code> component where bindings are fine and I have to call markForCheck occasionally or do I have to call <code>app.tick</code> frequently ?
   </dd>
 </dl>
 
