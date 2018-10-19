@@ -112,11 +112,11 @@
         <h2>Angular Component</h2>
         <app-emoji-text text="Hello you are cool!"></app-emoji-text>
         <textarea highlight-js [lang]="'html'">
-          <app-emoji-text
-            text="Hello you are cool!"
-            prefix="🌟"
-            postfix="🤘">
-          </app-emoji-text>
+<app-emoji-text
+  text="Hello you are cool!"
+  prefix="🌟"
+  postfix="🤘">
+</app-emoji-text>
         </textarea>
       </div>
 
@@ -124,11 +124,11 @@
         <h2>Web Component</h2>
         <web-emoji-text text="Hello you are cool!" prefix="🍀" postfix="🧐"></web-emoji-text>
         <textarea highlight-js [lang]="'html'">
-          <web-emoji-text
-            text="Hello you are cool!"
-            prefix="🍀"
-            postfix="🧐">
-          </web-emoji-text>
+<web-emoji-text
+  text="Hello you are cool!"
+  prefix="🍀"
+  postfix="🧐">
+</web-emoji-text>
         </textarea>
       </div>
     </div>
@@ -182,15 +182,15 @@
         The template looks more or less like this.
       </p>
       <textarea highlight-js [lang]="'html'">
-        <!-- blue marker -->
-        <div class="content--ng">
-          <ng-content></ng-content>
-        </div>
+<!-- blue marker -->
+<div class="content--ng">
+  <ng-content></ng-content>
+</div>
 
-        <!-- pink marker -->
-        <div class="content--slot">
-          <slot #itemsSlot (slotchange)="handleSlotContentChanged(event)"></slot>
-        </div>
+<!-- pink marker -->
+<div class="content--slot">
+  <slot #itemsSlot (slotchange)="handleSlotContentChanged(event)"></slot>
+</div>
       </textarea>
 
       <p>Depending on the environment (Angular or Web Component) projected arrives only through one of the projections. That's where I expected ng-content to be replaced by something like ng-slot so I can use ng-slot and it will translate to slot when being used in a web component.</p>
@@ -210,16 +210,16 @@
             </app-accordion-item>
           </app-accordion>
 
-          <textarea highlight-js [lang]="'html'">
-            <app-accordion>
-              <app-accordion-item title='first'>
-                content of the first accordion
-              </app-accordion-item>
-              <app-accordion-item title='second'>
-                content of the second accordion
-              </app-accordion-item>
-            </app-accordion>
-          </textarea>
+            <textarea highlight-js [lang]="'html'">
+  <app-accordion>
+    <app-accordion-item title='first'>
+      content of the first accordion
+    </app-accordion-item>
+    <app-accordion-item title='second'>
+      content of the second accordion
+    </app-accordion-item>
+  </app-accordion>
+              </textarea>
         </div>
 
         <div>
@@ -237,14 +237,14 @@
             </web-accordion-item>
           </web-accordion>
           <textarea highlight-js [lang]="'html'">
-            <web-accordion>
-              <web-accordion-item title='first'>
-                content of the first accordion
-              </web-accordion-item>
-              <web-accordion-item title='second'>
-                content of the second accordion
-              </web-accordion-item>
-            </web-accordion>
+<web-accordion>
+  <web-accordion-item title='first'>
+    content of the first accordion
+  </web-accordion-item>
+  <web-accordion-item title='second'>
+    content of the second accordion
+  </web-accordion-item>
+</web-accordion>
           </textarea>
         </div>
       </div>
@@ -272,32 +272,32 @@
             As usual there are slot and ng-content in the template but this time named to fill in specific parts of the given content. You will see the div I pass into the component has a data attribute and also a slot attribute of "fancy-content". That's because ng-content uses a selector approach to target content and slots are explicitly named.
         </p>
         <textarea highlight-js [lang]="'html'">
-          <h3>Internal content (view)</h3>
+<h3>Internal content (view)</h3>
 
-          <button>Default Button</button><br>
-          <app-button>Angular Button</app-button><br>
-          <web-button>Web Button</web-button>
+<button>Default Button</button><br>
+<app-button>Angular Button</app-button><br>
+<web-button>Web Button</web-button>
 
-          <h3>Projected content</h3>
-          <h4>Selector [fancy-content]</h4>
-          <div class="content--ng">
-            <ng-content select="[fancy-content]"></ng-content>
-          </div>
+<h3>Projected content</h3>
+<h4>Selector [fancy-content]</h4>
+<div class="content--ng">
+  <ng-content select="[fancy-content]"></ng-content>
+</div>
 
-          <div class="content--slot">
-            <slot name='fancy-content'></slot>
-          </div>
+<div class="content--slot">
+  <slot name='fancy-content'></slot>
+</div>
 
-          <h4>
-            Default <br>
-            <small>(not fetched from other ng-contents/slots yet)</small>
-          </h4>
-          <div class="content--ng">
-            <ng-content></ng-content>
-          </div>
-          <div class="content--slot">
-            <slot></slot>
-          </div>
+<h4>
+  Default <br>
+  <small>(not fetched from other ng-contents/slots yet)</small>
+</h4>
+<div class="content--ng">
+  <ng-content></ng-content>
+</div>
+<div class="content--slot">
+  <slot></slot>
+</div>
         </textarea>
     </div>
 
@@ -315,13 +315,13 @@
         </app-content-query>
         <hr class="example__divider">
         <textarea highlight-js [lang]="'html'">
-          <app-content-query>
-            <div slot="fancy-content" fancy-content>
-              <label #contentitem contentitem >1. An input <input/></label>
-              <p #contentitem contentitem>2. Lorem ipsum dolar sit amet</p>
-            </div>
-            <span #contentitem contentitem>3. Some content for the default slot</span>
-          </app-content-query>
+<app-content-query>
+  <div slot="fancy-content" fancy-content>
+    <label #contentitem contentitem >1. An input <input/></label>
+    <p #contentitem contentitem>2. Lorem ipsum dolar sit amet</p>
+  </div>
+  <span #contentitem contentitem>3. Some content for the default slot</span>
+</app-content-query>
         </textarea>
 
         <p>
@@ -331,9 +331,9 @@
         <p>
           See the first 3 ? ContentChildren works as expected and returns all three elements marked with <code>#contentitem</code>. Vanilla Query returns 0 as the query is not triggered in this context.
         </p>
-        <textarea highlight-js [lang]="'ts'">
-          @ContentChildren('contentitem') allContentItems: QueryList<any>;
-        </textarea>
+<textarea highlight-js [lang]="'ts'">
+  @ContentChildren('contentitem') allContentItems: QueryList<any>;
+</textarea>
       </div>
 
       <div>
@@ -346,21 +346,21 @@
           <span #contentitem contentitem>3. Some content for the default slot</span>
         </web-content-query>
         <hr class="example__divider">
-        <textarea highlight-js [lang]="'html'">
-          <web-content-query>
-            <div slot="fancy-content" fancy-content>
-              <label #contentitem contentitem >1. An input <input/></label>
-              <p #contentitem contentitem>2. Lorem ipsum dolar sit amet</p>
-            </div>
-            <span #contentitem contentitem>3. Some content for the default slot</span>
-          </web-content-query>
-        </textarea>
+<textarea highlight-js [lang]="'html'">
+  <web-content-query>
+    <div slot="fancy-content" fancy-content>
+      <label #contentitem contentitem >1. An input <input/></label>
+      <p #contentitem contentitem>2. Lorem ipsum dolar sit amet</p>
+    </div>
+    <span #contentitem contentitem>3. Some content for the default slot</span>
+  </web-content-query>
+</textarea>
         <p>
           The ContentQuery is empty and instead the vanilla query is triggered by the <code>(slotchanged)</code> event.
-          <textarea highlight-js [lang]="'ts'">
-            const elements = this.elementRef.nativeElement.querySelectorAll('[contentitem]');
-            this.elementsFromSlots = Array.prototype.slice.call(elements);
-          </textarea>
+<textarea highlight-js [lang]="'ts'">
+  const elements = this.elementRef.nativeElement.querySelectorAll('[contentitem]');
+  this.elementsFromSlots = Array.prototype.slice.call(elements);
+</textarea>
         </p>
       </div>
     </div>
@@ -398,21 +398,21 @@
         </p>
         <p>
           In the web component world you can extend the native elements. To base your element on a  <code>HTMLButtonElement</code> simply extend it like so:
-          <textarea highlight-js [lang]="'ts'">
-            export class ButtonVanillaNative extends HTMLButtonElement {
-              constructor() {
-                super();
-                // do something so you can recognize your own button
-                this.innerHTML = this.innerHTML + ' <-- via is="" 🙏';
-              }
-            }
-          </textarea>
+<textarea highlight-js [lang]="'ts'">
+  export class ButtonVanillaNative extends HTMLButtonElement {
+    constructor() {
+      super();
+      // do something so you can recognize your own button
+      this.innerHTML = this.innerHTML + ' <-- via is="" 🙏';
+    }
+  }
+</textarea>
 
           Later make your web component with it. When you define the element there is an option to tell the browser that you are actually extending from an existing element.
 
-          <textarea highlight-js [lang]="'ts'">
-            customElements.define('web-button-native', ButtonVanillaNative, {extends: 'button'});
-          </textarea>
+<textarea highlight-js [lang]="'ts'">
+  customElements.define('web-button-native', ButtonVanillaNative, {extends: 'button'});
+</textarea>
         </p>
         <p>
           You can use it with the <code>is</code> attribute. That's exactly what I have done with the following button:<br>
@@ -424,36 +424,36 @@
           Let's ignore the thing with <code>is</code> and think about how we could create the same extended button with Angular.
           We want to extend from <code>HTMLButtonElement</code> but there is simply no way. Look here
 
-          <textarea highlight-js [lang]="'ts'">
-            // 1a. Remember? That's how we just extended from HTMLButtonElement with plain JavaScript.
-            export class ButtonVanillaNative extends HTMLButtonElement
-            // 1b. and here how we registered our native button that extends from HTMLButtonElement.
-            customElements.define('web-button-native', ButtonVanillaNative, {extends: 'button'});
+<textarea highlight-js [lang]="'ts'">
+// 1a. Remember? That's how we just extended from HTMLButtonElement with plain JavaScript.
+export class ButtonVanillaNative extends HTMLButtonElement
+// 1b. and here how we registered our native button that extends from HTMLButtonElement.
+customElements.define('web-button-native', ButtonVanillaNative, {extends: 'button'});
 
-            // 2a. That's how we create a web component from an Angular component
-            // No way telling Angular to use HTMLButtonElement through createCustomElement()
-            const ButtonElement = createCustomElement(ButtonComponent, {injector});
+// 2a. That's how we create a web component from an Angular component
+// No way telling Angular to use HTMLButtonElement through createCustomElement()
+const ButtonElement = createCustomElement(ButtonComponent, {injector});
 
-            // 2b. We can't use {extends: 'button'} here as we are missing the correct base class.
-            customElements.define('web-button', ButtonElement);
-          </textarea>
+// 2b. We can't use {extends: 'button'} here as we are missing the correct base class.
+customElements.define('web-button', ButtonElement);
+</textarea>
 
         </p>
         <p>
           If you look into the Angular elements <a href='https://github.com/angular/angular/blob/331989cea357abf9a20088c41a86a077435d17f7/packages/elements/src/create-custom-element.ts#L42-L134'>sources</a>
           you will find that the underlying structure <code>NgElement</code> is always extending from HTMLElement.
 
-          <textarea highlight-js [lang]="'ts'">
-              export abstract class NgElement extends HTMLElement{
-                //..
-              }
-              export function createCustomElement<P>(...): NgElementConstructor<P> {
-                //...
-                class NgElementImpl extends NgElement {
-                  //...
-                }
-              }
-          </textarea>
+<textarea highlight-js [lang]="'ts'">
+export abstract class NgElement extends HTMLElement{
+  //..
+}
+export function createCustomElement<P>(...): NgElementConstructor<P> {
+  //...
+  class NgElementImpl extends NgElement {
+    //...
+  }
+}
+</textarea>
 
           So no way of extending an existing element I think. You can still wrap teh native element in your own web component.
           But as said, you will hide the existing API surface of the involved element from the user. Here an example with a wrapped button.
@@ -471,9 +471,9 @@
           the blue bar signals usage of ng-content
         </p>
         <app-button>I'm a button</app-button>
-        <textarea highlight-js [lang]="'html'">
-          <app-button>I'm a button</app-button>
-        </textarea>
+<textarea highlight-js [lang]="'html'">
+  <app-button>I'm a button</app-button>
+</textarea>
 
       </div>
 
@@ -483,9 +483,9 @@
           the pink bar signals usage of slot
         </p>
         <web-button>I'm a button</web-button>
-        <textarea highlight-js [lang]="'html'">
-          <web-button>I'm a button</web-button>
-        </textarea>
+<textarea highlight-js [lang]="'html'">
+  <web-button>I'm a button</web-button>
+</textarea>
       </div>
     </div>
 
