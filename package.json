@@ -1,5 +1,5 @@
 {
-  "name": "multiple-elements",
+  "name": "angular-vs-web-components",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
@@ -7,7 +7,8 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "deploy": "gh-pages -d dist/angular-vs-web-components"
   },
   "private": true,
   "dependencies": {
@@ -24,6 +25,7 @@
     "@angular/router": "~7.0.0",
     "core-js": "^2.5.4",
     "document-register-element": "^1.7.2",
+    "gh-pages": "^2.0.1",
     "highlightjs": "^9.12.0",
     "ngx-highlight-js": "^2.1.1",
     "rxjs": "~6.3.3",

@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "multiple-elements": {
+    "angular-vs-web-components": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "dist/multiple-elements",
+            "outputPath": "dist/angular-vs-web-components",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": "src/polyfills.ts",
@@ -65,18 +65,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "multiple-elements:build"
+            "browserTarget": "angular-vs-web-components:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "multiple-elements:build:production"
+              "browserTarget": "angular-vs-web-components:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "multiple-elements:build"
+            "browserTarget": "angular-vs-web-components:build"
           }
         },
         "test": {
@@ -111,5 +111,5 @@
       }
     }
   },
-  "defaultProject": "multiple-elements"
+  "defaultProject": "angular-vs-web-components"
 }
